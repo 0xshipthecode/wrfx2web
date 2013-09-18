@@ -1,10 +1,17 @@
 
 var websocket;
-var kml;
-var map;
+var kml = null;
+var map = null;
 var kml_urls = [];
+var job_id = null;
 
 function initialize() {
+
+  /* parse the location.href and find the jobid if any */
+  ndx = location.href.indexOf('jobid');
+  if(ndx >= 0) {
+    job_id = location.href.substring(ndx + 6);
+  }
 
   /* initialize the google map */
   var mapOptions = {
@@ -14,7 +21,6 @@ function initialize() {
       };
 
   map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-  kml = new google.maps.KmlLayer({url: 'http://mathweb.ucdenver.edu/~mvejmelka/test.kmz', map: map});
 
   /* initialize the websocket subsystem */
   if(!("WebSocket" in window)) {
@@ -22,6 +28,7 @@ function initialize() {
   } else {
       connect();
   };
+
 
   function connect()
   {
@@ -32,6 +39,7 @@ function initialize() {
       websocket.onerror = function(evt) { onError(evt) };
   };
 
+
   function disconnect() {
       websocket.close();
   };
@@ -39,6 +47,7 @@ function initialize() {
 
   function onOpen(evt) {
       sysmsg('CONNECTED\n');
+      sysmsg('job id = ' + job_id + '\n');
   };
 
   function onClose(evt) { 
@@ -65,13 +74,11 @@ function initialize() {
     value: 1, min:1, max:5, step:1, slide: function(ev, ui) { switchkml(ui.value); }
   });
 
-  console.log("init done\n");
 }
 
 
 function switchkml(ndx)
 {
-  console.log("Switching kml file to " + ndx);
   if(kml != null) { kml.setMap(null); }
   kml = new google.maps.KmlLayer({url: 'http://mathweb.ucdenver.edu/~mvejmelka/test' + ndx + '.kmz', map: map});
 
