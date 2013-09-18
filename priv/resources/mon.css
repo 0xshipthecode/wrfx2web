@@ -1,0 +1,43 @@
+@font-face {
+    font-family: distproth;
+    src: url(http://mathweb.ucdenver.edu/~mvejmelka/fonts/DistProTh.otf) format('opentype');
+}
+
+body, p, input {
+  font-family: distproth;
+  font-size: 18px;
+}
+
+h1 {
+  text-align: center;
+  font-family: distproth;
+  font-size: 30px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  text-align: center;
+  font-family: distproth;
+  font-size: 24px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+p {
+  margin-bottom: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+#sysmsg {
+  font-size:14px;
+  margin-left:20px;
+  margin-right:20px;
+  width:410px;
+  height:180px
+}
+
+#kml-slider {
+  margin: 5px 20px 10px 20px;
+}

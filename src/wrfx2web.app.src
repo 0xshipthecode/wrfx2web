@@ -1,0 +1,15 @@
+%% Feel free to use, reuse and abuse the code in this file.
+
+{application, wrfx2web, [
+	{description, "WRFx2 web server."},
+	{vsn, "1"},
+	{modules, []},
+	{registered, [wrfx2web_sup]},
+	{applications, [
+		kernel,
+		stdlib,
+		cowboy
+	]},
+	{mod, {wrfx2web_app, []}},
+	{env, []}
+]}.

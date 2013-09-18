@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>NASA project #11-FIRES11-0038 submission</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <link type="text/css" rel="stylesheet" href="http://mathweb.ucdenver.edu/~mvejmelka/css/reset.css" />
+  <link type-"text/css" rel="stylesheet" href="/resources/960.css" />
+  <link type="text/css" rel="stylesheet" href="/resources/ctrl.css" />
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+  <script src="/resources/jquery.min.js"></script>
+  <script src="/resources/moment.min.js"></script>
+  <script src="/resources/ctrl.js"></script>
+</head>
+<body>
+  <div class="container_12">
+    <div class="grid_12">
+      <h1>NASA project #11-FIRES11-0038 submission</h1>
+    </div>
+    <div class="clear"></div>
+     
+    <div class="grid_8" style="height:300px;" id="map-canvas"></div>
+    <div class="grid_4" style="height:300px;background-color:seashell;" id="status">
+      <h2>System status</h2>
+      <p>Compute system: <span id="status" style="color:green;">ONLINE</span></p>
+      <p>Jobs in queue: 0</p>
+      <p>Free nodes: 10/10</p>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_12" style="height:30px;"></div>
+
+    <div class="grid_6" style="height:300px;background-color:seashell;">
+      <h2>Ignition control</h2>
+      <label class="ign-ctrl" for="ign_time">Ignition time</label>
+      <input class="ign-ctrl" type="text" id="ign_time" readonly="true" value="2012-09-09 04:00:00"></input> <br />
+
+      <label class="ign-ctrl" for="ign_lat">Ign. latitude</label>
+      <input class="ign-ctrl" type="text" id="ign_lat" value="47.5"></input> <br />
+
+      <label class="ign-ctrl" for="ign_lat">Ign. longitude</label>
+      <input class="ign-ctrl" type="text" id="ign_lon" value="-119.5"></input> <br />
+
+      <label class="ign-ctrl" for="ign_lat">Forecast length (hr)</label>
+      <input class="ign-ctrl" type="text" id="fc_len" value="12"></input> <br />
+
+      <button id="Submit" style="width:120px;padding:5px;margin:10px 180px 10px;font-family:distproth;font-size:20px;" onclick="submitjob()">Submit</button>
+    </div>
+    <div class="grid_6" style="height:300px;background-color:seashell;">
+      <h2>System messages</h2>
+      <textarea id="sysmsg" style="font-size:14px;margin-left:20px;margin-right:20px;width:410px;height:220px";></textarea>
+    </div>
+   <div class="clear" style="margin-bottom:20px;"></div>
+
+   <div class="grid_12">
+    <p>This is a prototype of a online coupled fire-weather simulator submitted for the 2013 Oct 1 review deadline of
+       the NASA grant 11-FIRES11-0038.  It provides the capability to start, monitor and stop a wildland fire simulation
+       using the coupled weather/fire code <a href="www.openwfm.org">WRF-Fire</a>.</p>
+   </div>
+  </div>
+</body>
+</html>
+
