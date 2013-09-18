@@ -27,7 +27,7 @@ start(_Type, _Args) ->
 			]}
 		]}
 	]),
-	{ok, _} = cowboy:start_http(http, 100, [{port, 8080}],
+	{ok, _} = cowboy:start_http(http, 100, [{port, 8000}],
 		[{env, [{dispatch, Dispatch}]}]),
 	wrfx2web_sup:start_link().
 

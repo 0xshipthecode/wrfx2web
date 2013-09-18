@@ -32,7 +32,7 @@ function initialize() {
 
   function connect()
   {
-      websocket = new WebSocket('ws://127.0.0.1:8080/websocket/monitor');
+      websocket = new WebSocket('ws://127.0.0.1:8000/websocket/monitor');
       websocket.onopen = function(evt) { onOpen(evt) };
       websocket.onclose = function(evt) { onClose(evt) };
       websocket.onmessage = function(evt) { onMessage(evt) };
