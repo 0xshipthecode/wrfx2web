@@ -15,7 +15,13 @@ websocket_init(_TransportName, Req, _Opts) ->
   {ok, Req, undefined_state}.
 
 websocket_handle({text, Msg}, Req, State) ->
-  {reply, {text, << "Received JSON request: ", Msg/binary >>}, Req, State};
+  try
+    _R = rfc4627:decode(Msg),
+    {reply, {text, <<"{ \"result\" : \"success\", \"action\" : \"submit\",
+                        \"jobid\": \"25b55327-2c43-4d62-beb9-a314ccf91c9f\" }">>}, Req, State}
+  catch _ ->
+    {reply, {text, <<"{ \"result\" : \"error\", \"reason\" : \"invalid json\" }">>}, Req, State}
+  end;
 websocket_handle(_Data, Req, State) ->
   {ok, Req, State}.
 

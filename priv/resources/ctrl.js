@@ -56,33 +56,49 @@ function initialize() {
   };
 
   function onMessage(evt) {
-      sysmsg(evt.data + '\n');
+    var json = JSON.parse(evt.data);
+    if(json['action'] == 'submit') {
+      if(json['result'] == 'success') {
+        sysmsg('SUCCESS! Stand by for redirect to monitoring page.');
+        setTimeout(function () { window.location.href = "http://127.0.0.1:8000/pages/monitor.html?jobid=" + json['jobid']; }, 5000);
+      } else {
+        sysmsg('Submit action failed with reason: ' + json['error']);
+        $("#submit").attr("disabled", false);
+      }
+    } else if(json['action'] = 'system_status') {
+      // update system status here
+    } else {
+      sysmsg('JSON message <' + evt.data + '> not understood.');
+    }
   };
 
   function onError(evt) {
       sysmsg('ERROR ' + evt.data + '\n');
   };
 
-  function sysmsg(code)
-  {
-    var ta = $('#sysmsg');
-    var msg = moment().format('YYYY-MM-DD_HH:mm:ss') + " - " + code;
-    ta.append(msg);
-    ta.animate({scrollTop:ta[0].scrollHeight - ta.height() }, 1000);
-  }
-
 }
+
+function sysmsg(code)
+{
+  var ta = $('#sysmsg');
+  var msg = moment().format('YYYY-MM-DD_HH:mm:ss') + " - " + code + '\n';
+  ta.append(msg);
+  ta.animate({scrollTop:ta[0].scrollHeight - ta.height() }, 1000);
+}
+
 
 google.maps.event.addDomListener(window, 'load', initialize);
 
   function submitjob() {
-      if(websocket.readyState == websocket.OPEN){
+      if(websocket.readyState == websocket.OPEN) {
+          sysmsg('Submitting job request now.');
           websocket.send('{ "request": "submit-job", ' +
                          '"lat": ' + $('#ign_lat').val() + ", " +
                          '"lon": ' + $('#ign_lon').val() + ", " +
                          '"time": "' +$('#ign_time').val() + '", ' +
                          '"fc_len": ' + $('#fc_len').val() +
                          ' }');
+          $('#submit').attr("disabled", true);
       } else {
            sysmsg('Websocket disconnected.');
       };

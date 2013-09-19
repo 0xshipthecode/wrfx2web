@@ -11,11 +11,15 @@ init({tcp, http}, _Req, _Opts) ->
   {upgrade, protocol, cowboy_websocket}.
 
 websocket_init(_TransportName, Req, _Opts) ->
-  erlang:start_timer(1000, self(), <<"Hello from wrfx2 web frontend.">>),
   {ok, Req, undefined_state}.
 
 websocket_handle({text, Msg}, Req, State) ->
-  {reply, {text, << "You sent ", Msg/binary >>}, Req, State};
+   try
+    _R = rfc4627:decode(Msg),
+    {reply, {text, <<"{ \"message\" : \"job_status\", \"compltime_s\" : 520, \"jobid\": \"25b55327-2c43-4d62-beb9-a314ccf91c9f\" }">>}, Req, State}
+  catch _ ->
+    {reply, {text, <<"{ \"result\" : \"error\", \"reason\" : \"invalid json\" }">>}, Req, State}
+  end;
 websocket_handle(_Data, Req, State) ->
   {ok, Req, State}.
 

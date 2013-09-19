@@ -46,35 +46,44 @@ function initialize() {
 
 
   function onOpen(evt) {
-      sysmsg('CONNECTED\n');
-      sysmsg('job id = ' + job_id + '\n');
+      sysmsg('CONNECTED');
+      sysmsg('You are monitoring job ' + job_id);
+      
+      // send a request to monitor job with our job_id
+      websocket.send("{ \"request\" : \"monitor\", \"jobid\" : \"" + job_id + "\" }");
   };
 
-  function onClose(evt) { 
-      sysmsg('DISCONNECTED\n');
+  function onClose(evt) {
+      sysmsg('DISCONNECTED');
   };
 
   function onMessage(evt) {
-      sysmsg(evt.data + '\n');
+      json = JSON.parse(evt.data);
+      if(json["message"] == "job_status") {
+        // update job status here
+        sysmsg(evt.data);
+      }
   };
 
   function onError(evt) {
-      sysmsg('ERROR ' + evt.data + '\n');
+      sysmsg('ERROR ' + evt.data);
   };
 
-  function sysmsg(code)
+    $("#kml-slider").slider({
+    value: 1, min:1, max:5, step:1, slide: function(ev, ui) { switchkml(ui.value); }
+  });
+}
+
+
+
+function sysmsg(code)
   {
     var ta = $('#sysmsg');
-    var msg = moment().format('YYYY-MM-DD_HH:mm:ss') + " - " + code;
+    var msg = moment().format('YYYY-MM-DD_HH:mm:ss') + " - " + code + '\n';
     ta.append(msg);
     ta.animate({scrollTop:ta[0].scrollHeight - ta.height() }, 1000);
   };
 
-  $("#kml-slider").slider({
-    value: 1, min:1, max:5, step:1, slide: function(ev, ui) { switchkml(ui.value); }
-  });
-
-}
 
 
 function switchkml(ndx)
