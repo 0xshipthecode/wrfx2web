@@ -19,12 +19,24 @@
     <h1>Fire simulation monitor</h1>
     <div class="grid_12" style="height:500px;margin-bottom:20px" id="map-canvas"></div>
 
-    <div class="grid_6" style="height:250px;background-color:seashell;">
+    <div class="grid_6" style="height:300px;background-color:seashell;">
       <h2>Job status and control</h2>
+      <label class="min-info" for="curr_time">Current view</label>
+      <input class="mon-info" type="text" id="curr_time" readonly="true" value="none"></input> <br />
       <div id="kml-slider"></div>
+      <div id="comp-progress"></div>
+      <label class="mon-info" for="comp-stage">Stage</label>
+      <input class="mon-info" type="text" id="comp-stage" readonly="true" value="unknown"></input> <br />
+      <label class="mon-info" for="comp-time">Completion time</label>
+      <input class="mon-info" type="text" id="comp-time" readonly="true" value="unknown"></input> <br />
+      <label class="mon-info" for="sim-time">Time in simulation</label>
+      <input class="mon-info" type="text" id="sim-time" readonly="true" value="unknown"></input> <br />
+      <label class="mon-info" for="sim-accel">Speedup vs. RT</label>
+      <input class="mon-info" type="text" id="sim-accel" readonly="true" value="unknown"></input> <br />
+
       <button id="cancel" onclick="canceljob()">Cancel</button>
     </div>
-    <div class="grid_6" style="height:250px;background-color:seashell;">
+    <div class="grid_6" style="height:300px;background-color:seashell;">
       <h2>System messages</h2>
       <textarea id="sysmsg"></textarea>
     </div>

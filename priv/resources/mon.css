@@ -41,3 +41,27 @@ p {
 #kml-slider {
   margin: 5px 20px 10px 20px;
 }
+
+#comp-progress {
+  margin: 5px 20px 10px 20px;
+  height: 20px;
+}
+
+label.mon-info {
+  margin-left:20px;
+  display:inline-block;
+  width:8em;
+  padding-right:20px;
+  text-align:right;
+  margin-bottom:20px;
+}
+
+input.mon-info {
+  width:190px;
+  text-align:right;
+  margin-left:auto;
+  margin-right:20px;
+  margin-bottom:20px;
+}
+
+

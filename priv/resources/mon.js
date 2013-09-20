@@ -4,6 +4,7 @@ var kml = null;
 var map = null;
 var kml_urls = [];
 var job_id = null;
+var last_stage = null;
 
 function initialize() {
 
@@ -58,11 +59,24 @@ function initialize() {
   };
 
   function onMessage(evt) {
+      console.log(evt.data);
       json = JSON.parse(evt.data);
       console.log(json);
       if(json["action"] == "update_status") {
-        kml_urls = json["kmls"];
-        $("#kml-slider").slider('option',{max: kml_urls.length});
+        $("#comp-stage").val(json["stage"]);
+        $("#comp-time").val(json["completion_time"]);
+        $("#sim-time").val(json["sim_time"]);
+        $("#sim-accel").val(json["sim_accel"]);
+        if(json["stage"] != last_stage) {
+            sysmsg('Simulation in stage \"' + json["stage"] + "\".");
+            last_stage = json["stage"];
+         }
+        if(json.hasOwnProperty("kmls")) {
+            kml_urls = json["kmls"];
+            $("#kml-slider").slider('option',{max: kml_urls.length});
+            $("#comp-progress").progressbar({value : json["percent_done"]});
+            if(kml_urls.length == 1) { switchkml(1); }
+        }
       } 
   };
 
@@ -73,6 +87,8 @@ function initialize() {
     $("#kml-slider").slider({
     value: 1, min:1, max:5, step:1, slide: function(ev, ui) { switchkml(ui.value); }
   });
+
+    $("#comp-progress").progressbar("option", "value", false);
 }
 
 
@@ -90,9 +106,9 @@ function sysmsg(code)
 function switchkml(ndx)
 {
   if(kml != null) { kml.setMap(null); }
-  var uri = 'http://mathweb.ucdenver.edu/~mvejmelka/fbs/kmls/' + kml_urls[ndx-1];
+  var uri = 'http://mathweb.ucdenver.edu/~mvejmelka/fbs/kmls/' + job_id + "/" + kml_urls[ndx-1];
   kml = new google.maps.KmlLayer({url: uri, map: map});
-
+  $("#curr_time").val(kml_urls[ndx-1].substr(0, 19));
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

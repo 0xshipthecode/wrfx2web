@@ -35,6 +35,13 @@ websocket_handle({text, Msg}, Req, State) ->
 websocket_handle(_Data, Req, State) ->
   {ok, Req, State}.
 
+
+time_to_str("undefined") ->
+    "undefined";
+time_to_str(T) ->
+    lists:flatten('time-arith':'to-esmf-str'(T)).
+
+
 websocket_info({timeout, _Ref, update_status}, Req, JSP) ->
   PL = jobstate:'get-plist'(JSP),
   S = plist:get(stage, PL),
@@ -42,12 +49,16 @@ websocket_info({timeout, _Ref, update_status}, Req, JSP) ->
     "done" -> ok;
     _ -> erlang:start_timer(2000, self(), update_status)
   end,
-  ST = lists:flatten('time-arith':'to-esmf-str'(plist:get('sim-time', PL))),
-  CT = lists:flatten('time-arith':'to-esmf-str'(plist:get('completion-time', PL))),
-  Ks = plist:get(kmls, PL),
-  SA = plist:get('sim-acceleration', PL),
-  Payload = io_lib:format("{ \"action\" : \"update_status\", \"sim_time\" : ~p, \"completion_time\" : ~p,", [ST, CT]) ++
-            " \"kmls\" : [ " ++ string:join(lists:map(fun(X) -> "\"" ++ X ++ "\"" end, Ks), ", ") ++ " ] }",
+  ST = time_to_str(plist:get('sim-time', "undefined", PL)),
+  CT = time_to_str(plist:get('completion-time', "undefined", PL)),
+  PD = plist:get('percent-done', "undefined", PL),
+  SA = plist:get('sim-acceleration', "undefined", PL),
+  Stage = plist:get(stage, "unknown", PL),
+  Ks = plist:get(kmls, [], PL),
+  Payload = lists:flatten(io_lib:format("{ \"action\" : \"update_status\", \"sim_time\" : ~p,"
+                          " \"sim_accel\" : ~p, \"stage\" : ~p,"
+                          " \"completion_time\" : ~p, \"percent_done\" : ~p,", [ST, SA, Stage, CT, PD]) ++
+            " \"kmls\" : [ " ++ string:join(lists:map(fun(X) -> "\"" ++ X ++ "\"" end, Ks), ", ") ++ " ] }"),
   io:format("Sending out update ~p~n", [Payload]),
   {reply, {text, list_to_binary(Payload)}, Req, JSP};
 websocket_info(_Info, Req, State) ->
