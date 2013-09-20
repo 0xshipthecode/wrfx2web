@@ -56,17 +56,21 @@ function initialize() {
   };
 
   function onMessage(evt) {
+    console.log(evt.data);
     var json = JSON.parse(evt.data);
+    console.log(json);
     if(json['action'] == 'submit') {
       if(json['result'] == 'success') {
         sysmsg('SUCCESS! Stand by for redirect to monitoring page.');
-        setTimeout(function () { window.location.href = "http://127.0.0.1:8000/pages/monitor.html?jobid=" + json['jobid']; }, 5000);
+        setTimeout(function () { window.location.href = "http://mathweb.ucdenver.edu/~mvejmelka/fbs/pages/monitor.html?jobid=" + json['jobid']; }, 5000);
       } else {
         sysmsg('Submit action failed with reason: ' + json['error']);
         $("#submit").attr("disabled", false);
       }
-    } else if(json['action'] = 'system_status') {
+    } else if(json['action'] == 'state_update') {
       // update system status here
+    } else if(json['action'] == 'display') {
+        sysmsg(json['message']);
     } else {
       sysmsg('JSON message <' + evt.data + '> not understood.');
     }
@@ -92,7 +96,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
   function submitjob() {
       if(websocket.readyState == websocket.OPEN) {
           sysmsg('Submitting job request now.');
-          websocket.send('{ "request": "submit-job", ' +
+          websocket.send('{ "request": "submit", ' +
                          '"lat": ' + $('#ign_lat').val() + ", " +
                          '"lon": ' + $('#ign_lon').val() + ", " +
                          '"time": "' +$('#ign_time').val() + '", ' +

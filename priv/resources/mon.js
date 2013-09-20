@@ -59,10 +59,11 @@ function initialize() {
 
   function onMessage(evt) {
       json = JSON.parse(evt.data);
-      if(json["message"] == "job_status") {
-        // update job status here
-        sysmsg(evt.data);
-      }
+      console.log(json);
+      if(json["action"] == "update_status") {
+        kml_urls = json["kmls"];
+        $("#kml-slider").slider('option',{max: kml_urls.length});
+      } 
   };
 
   function onError(evt) {
@@ -89,7 +90,8 @@ function sysmsg(code)
 function switchkml(ndx)
 {
   if(kml != null) { kml.setMap(null); }
-  kml = new google.maps.KmlLayer({url: 'http://mathweb.ucdenver.edu/~mvejmelka/test' + ndx + '.kmz', map: map});
+  var uri = 'http://mathweb.ucdenver.edu/~mvejmelka/fbs/kmls/' + kml_urls[ndx-1];
+  kml = new google.maps.KmlLayer({url: uri, map: map});
 
 }
 

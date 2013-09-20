@@ -24,7 +24,11 @@ start(_Type, _Args) ->
                                 {mimetypes, [{<<".js">>, [<<"application/javascript">>]},
                                              {<<".css">>, [<<"text/css">>]},
                                              {<<".png">>, [<<"image/png">>]}]}
-			]}
+			]},
+            {"/kmls/[...]", cowboy_static, [
+                {directory, {priv_dir, wrfx2web, [<<"kmls">>]}},
+                                {mimetypes, [{<<".kmz">>, [<<"application/vnd.google-earth.kmz">>]}]}
+            ]}
 		]}
 	]),
 	{ok, _} = cowboy:start_http(http, 100, [{port, 8000}],
