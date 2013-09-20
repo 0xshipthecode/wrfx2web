@@ -29,8 +29,8 @@ function initialize() {
 
   function updateIgnCoords(ll)
   {
-    $('#ign_lat').val(ll.ob);
-    $('#ign_lon').val(ll.pb);
+    $('#ign_lat').val(ll.ob.toPrecision(7));
+    $('#ign_lon').val(ll.pb.toPrecision(7));
   };
 
   function connect()
@@ -56,9 +56,7 @@ function initialize() {
   };
 
   function onMessage(evt) {
-    console.log(evt.data);
     var json = JSON.parse(evt.data);
-    console.log(json);
     if(json['action'] == 'submit') {
       if(json['result'] == 'success') {
         sysmsg('SUCCESS! Stand by for redirect to monitoring page.');
@@ -68,7 +66,13 @@ function initialize() {
         $("#submit").attr("disabled", false);
       }
     } else if(json['action'] == 'state_update') {
-      // update system status here
+      $("#host").text(json['system']);
+      $("#freenodes").text(json['freenodes']);
+      $("#nodes").text(json['nodes']);
+      $("#qlen").text(json['qlen']);
+      $("#numsims").text(json['numsims']);
+      $("#activesims").text(json['activesims']);
+      $("#lastupdated").text(json['lastupdated']);
     } else if(json['action'] == 'display') {
         sysmsg(json['message']);
     } else {

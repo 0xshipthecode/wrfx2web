@@ -5,7 +5,7 @@
 
     body, p, input {
       font-family: distproth;
-      font-size: 18px;
+      font-size: 16px;
     }
 
     h1 {
@@ -31,20 +31,21 @@
     }
 
     label.ign-ctrl {
-      margin-left:20px;
+      margin-left:50px;
       display:inline-block;
       width:8em;
       padding-right:20px;
       text-align:right;
-      margin-bottom:20px;
+      margin-bottom:10px;
+      width:140px;
     }
 
     input.ign-ctrl {
-      width:190px;
+      width:160px;
       text-align:right;
       margin-left:auto;
-      margin-right:20px;
-      margin-bottom:20px;
+      margin-right:0px;
+      margin-bottom:10px;
     }
 
 

@@ -23,7 +23,7 @@ websocket_handle({text, Msg}, Req, State) ->
         Lat = plist:get("lat", PL),
         Lon = plist:get("lon", PL),
         IT = {{2013, 9, 1}, {4, 0, 0}},
-        FC = plist:get("fc_len", PL),
+        _FC = plist:get("fc_len", PL),
         {ok, U, _J} = jobmaster:submitjob('fire-sim', [{'ign-when', IT}, {'ign-where', {Lat, Lon}}, {'num-nodes', 12}, {ppn, 12}, {'wall-time-hrs', 4}]),
         Repl = io_lib:format("{ \"result\" : \"success\", \"action\" : \"submit\", \"jobid\": ~p }", [U]),
         {reply, {text, list_to_binary(Repl)}, Req, State};
@@ -37,7 +37,22 @@ websocket_handle(_Data, Req, State) ->
   {ok, Req, State}.
 
 websocket_info({timeout, _Ref, update_state}, Req, State) ->
-  {reply, {text, <<"{ \"action\" : \"state_update\", \"system\" : \"gross\", \"nodes\" : 10, \"qsize\" : 0, \"free_nodes\" : 10 }">>}, Req, State};
+  erlang:start_timer(2000, self(), update_state),
+  try
+    S = sysmon:getstate(),
+    NST = length(jobmaster:listjobs()),
+    H = plist:get(host, S),
+    TN = plist:get(nodes, "unknown", S),
+    FN = plist:get(freenodes, "unknown", S),
+    QL = plist:get(qlen, "unknown", S),
+    LU = lists:flatten('time-arith':'to-esmf-str'(plist:get(lastupdated, S))),
+    Payload = io_lib:format("{ \"action\" : \"state_update\", \"system\" : ~p, \"nodes\" : ~p, \"freenodes\" : ~p,"
+                            " \"numsims\" : ~p, \"qlen\" : ~p, \"lastupdated\" : ~p }", [H, TN, FN, NST, QL, LU]),
+    {reply, {text, list_to_binary(Payload)}, Req, State}
+  catch _ ->
+    io:format("failed to read state with exception ~p~n", [erlang:get_stacktrace()]),
+    {ok, Req, State}
+  end;
 websocket_info({timeout, _Ref, Msg}, Req, State) ->
   {reply, {text, Msg}, Req, State};
 websocket_info(_Info, Req, State) ->

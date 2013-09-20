@@ -22,9 +22,12 @@
     <div class="grid_8" style="height:300px;" id="map-canvas"></div>
     <div class="grid_4" style="height:300px;background-color:seashell;" id="status">
       <h2>System status</h2>
-      <p>Compute system: <span id="status" style="color:green;">ONLINE</span></p>
-      <p>Jobs in queue: 0</p>
-      <p>Free nodes: 10/10</p>
+      <p>System: <label id="host"></label></p>
+      <p>Queued jobs: <label id="qlen">UNKNOWN</label></p>
+      <p>Total simulations: <label id="numsims">UNKNOWN</label></p>
+      <p>Free nodes: <label id="freenodes">?</label>/<label id="nodes">?</label></p>
+      <p>Status: <label id="status" style="color:green;">ONLINE</label></p>
+      <p>Last updated: <label id="lastupdated">NEVER</label></p>
     </div>
     <div class="clear"></div>
     <div class="grid_12" style="height:30px;"></div>
@@ -34,16 +37,16 @@
       <label class="ign-ctrl" for="ign_time">Ignition time</label>
       <input class="ign-ctrl" type="text" id="ign_time" readonly="true" value="2012-09-09 04:00:00"></input> <br />
 
-      <label class="ign-ctrl" for="ign_lat">Ign. latitude</label>
+      <label class="ign-ctrl" for="ign_lat">Ignition latitude</label>
       <input class="ign-ctrl" type="text" id="ign_lat" value="47.5"></input> <br />
 
-      <label class="ign-ctrl" for="ign_lat">Ign. longitude</label>
+      <label class="ign-ctrl" for="ign_lat">Ignition longitude</label>
       <input class="ign-ctrl" type="text" id="ign_lon" value="-119.5"></input> <br />
 
       <label class="ign-ctrl" for="ign_lat">Forecast length (hr)</label>
       <input class="ign-ctrl" type="text" id="fc_len" value="12"></input> <br />
 
-      <button id="Submit" style="width:120px;padding:5px;margin:10px 180px 10px;font-family:distproth;font-size:20px;" onclick="submitjob()">Submit</button>
+      <button id="Submit" style="width:120px;padding:5px;margin:10px 180px 10px;font-family:distproth;font-size:20px;" onclick="submitjob()">Start job</button>
     </div>
     <div class="grid_6" style="height:300px;background-color:seashell;">
       <h2>System messages</h2>

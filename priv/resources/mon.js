@@ -59,24 +59,31 @@ function initialize() {
   };
 
   function onMessage(evt) {
-      console.log(evt.data);
       json = JSON.parse(evt.data);
-      console.log(json);
       if(json["action"] == "update_status") {
         $("#comp-stage").val(json["stage"]);
         $("#comp-time").val(json["completion_time"]);
         $("#sim-time").val(json["sim_time"]);
-        $("#sim-accel").val(json["sim_accel"]);
+        if(json["sim_accel"] != "undefined") {
+          $("#sim-accel").val(json["sim_accel"].toPrecision(3) + "x");
+        }
         if(json["stage"] != last_stage) {
             sysmsg('Simulation in stage \"' + json["stage"] + "\".");
             last_stage = json["stage"];
          }
-        if(json.hasOwnProperty("kmls")) {
-            kml_urls = json["kmls"];
-            $("#kml-slider").slider('option',{max: kml_urls.length});
-            $("#comp-progress").progressbar({value : json["percent_done"]});
-            if(kml_urls.length == 1) { switchkml(1); }
-        }
+         
+         var pdone = json["percent_done"];
+         if(pdone != "undefined") {
+            $("#comp-progress").progressbar({ value: pdone })
+                               .children('.ui-progressbar-value')
+                               .html(pdone.toPrecision(3) + '%')
+                               .css("text-align", "center")
+                               .css("color", "black")
+                               .css("font-size", "12");
+         }
+         kml_urls = json["kmls"];
+         $("#kml-slider").slider('option',{max: kml_urls.length});
+         if(kml == null) { switchkml(1); }
       } 
   };
 
@@ -88,7 +95,8 @@ function initialize() {
     value: 1, min:1, max:5, step:1, slide: function(ev, ui) { switchkml(ui.value); }
   });
 
-    $("#comp-progress").progressbar("option", "value", false);
+  $("#comp-progress").progressbar();
+  $("#comp-progress").progressbar("option", "value", false);
 }
 
 
