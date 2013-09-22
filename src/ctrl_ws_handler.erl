@@ -18,15 +18,19 @@ websocket_init(_TransportName, Req, _Opts) ->
 websocket_handle({text, Msg}, Req, State) ->
   try
     {ok, {obj, PL}, []} = rfc4627:decode(Msg),
-    case plist:get("request", PL) of
+    case plist:get("request", undefined, PL) of
       <<"submit">> ->
         Lat = plist:get("lat", PL),
         Lon = plist:get("lon", PL),
         IT = {{2013, 9, 1}, {4, 0, 0}},
         _FC = plist:get("fc_len", PL),
-        {ok, U, _J} = jobmaster:submitjob('fire-sim', [{'ign-when', IT}, {'ign-where', {Lat, Lon}}, {'num-nodes', 12}, {ppn, 12}, {'wall-time-hrs', 4}]),
-        Repl = io_lib:format("{ \"result\" : \"success\", \"action\" : \"submit\", \"jobid\": ~p }", [U]),
-        {reply, {text, list_to_binary(Repl)}, Req, State};
+        case jobmaster:submitjob('fire-sim', [{'ign-when', IT}, {'ign-where', {Lat, Lon}}, {'num-nodes', 12}, {ppn, 12}, {'wall-time-hrs', 4}]) of
+          {ok, U, _} -> 
+            Repl = io_lib:format("{ \"result\" : \"success\", \"action\" : \"submit\", \"jobid\": ~p }", [U]),
+            {reply, {text, list_to_binary(Repl)}, Req, State};
+          busy ->
+            {reply, {text, <<"{\"result\" : \"failure\", \"reason\" : \"Another job is running at this time.\"}">>}, Req, State}
+        end;
       _ ->
         {reply, {text, <<"{ \"result\"  \"error\", \"reason\" : \"invalid command\" }">>}, Req, State}
     end
@@ -41,13 +45,14 @@ websocket_info({timeout, _Ref, update_state}, Req, State) ->
   try
     S = sysmon:getstate(),
     NST = length(jobmaster:listjobs()),
+    NSA = length(jobmaster:activejobs()),
     H = plist:get(host, S),
     TN = plist:get(nodes, "unknown", S),
     FN = plist:get(freenodes, "unknown", S),
     QL = plist:get(qlen, "unknown", S),
     LU = lists:flatten('time-arith':'to-esmf-str'(plist:get(lastupdated, S))),
     Payload = io_lib:format("{ \"action\" : \"state_update\", \"system\" : ~p, \"nodes\" : ~p, \"freenodes\" : ~p,"
-                            " \"numsims\" : ~p, \"qlen\" : ~p, \"lastupdated\" : ~p }", [H, TN, FN, NST, QL, LU]),
+                            " \"numsims\" : ~p, \"activesims\" : ~p, \"qlen\" : ~p, \"lastupdated\" : ~p }", [H, TN, FN, NST, NSA, QL, LU]),
     {reply, {text, list_to_binary(Payload)}, Req, State}
   catch _ ->
     io:format("failed to read state with exception ~p~n", [erlang:get_stacktrace()]),

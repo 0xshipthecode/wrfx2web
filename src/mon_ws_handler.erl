@@ -24,7 +24,7 @@ websocket_handle({text, Msg}, Req, State) ->
             {reply, {text, <<"{ \"request\" : \"monitor\", \"result\" : \"failed\", \"reason\" : \"Sorry, I cannot find the job you are looking for.\" }">>}, Req, State};
           JSP ->
             erlang:start_timer(2000, self(), update_status),
-            jobstate:subscribe(JSP),
+            %jobstate:subscribe(JSP),
             {reply, {text, <<"{ \"request\" : \"monitor\", \"result\" : \"success\" }">>}, Req, JSP}
          end;
       _ ->
@@ -59,6 +59,7 @@ websocket_info(update_status, Req, JSP) ->
 websocket_info({'state-changed', _}, Req, State) ->
   websocket_info(update_status, Req, State);
 websocket_info({timeout, _Ref, update_status}, Req, JSP) ->
+  erlang:start_timer(4000, self(), update_status),
   websocket_info(update_status, Req, JSP);
 websocket_info(Info, Req, State) ->
   io:format("Unprocessed message ~p~n", [Info]),
@@ -68,6 +69,8 @@ websocket_info(Info, Req, State) ->
 websocket_terminate(_Reason, _Req, State) ->
   case State of
     undefined_state -> ok;
-    JSP -> jobstate:unsubscribe(JSP)
+    _JSP ->
+      %jobstate:unsubscribe(JSP)
+      ok
   end.
 
