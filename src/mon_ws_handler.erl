@@ -30,7 +30,7 @@ websocket_handle({text, Msg}, Req, State) ->
       _ ->
         {reply, {text, <<"{ \"result\" : \"error\", \"reason\" : \"Request not understood by server.\" }">>}, Req, State}
     end
-  catch _ ->
+  catch _:_ ->
     {reply, {text, <<"{ \"result\" : \"error\", \"reason\" : \"error in handler\" }">>}, Req, State}
   end;
 websocket_handle(_Data, Req, State) ->

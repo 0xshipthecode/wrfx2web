@@ -34,7 +34,7 @@ websocket_handle({text, Msg}, Req, State) ->
       _ ->
         {reply, {text, <<"{ \"result\"  \"error\", \"reason\" : \"invalid command\" }">>}, Req, State}
     end
-  catch _ ->
+  catch _:_ ->
     {reply, {text, <<"{ \"result\" : \"error\", \"reason\" : \"invalid json\" }">>}, Req, State}
   end;
 websocket_handle(_Data, Req, State) ->
@@ -54,8 +54,7 @@ websocket_info({timeout, _Ref, update_state}, Req, State) ->
     Payload = io_lib:format("{ \"action\" : \"state_update\", \"system\" : ~p, \"nodes\" : ~p, \"freenodes\" : ~p,"
                             " \"numsims\" : ~p, \"activesims\" : ~p, \"qlen\" : ~p, \"lastupdated\" : ~p }", [H, TN, FN, NST, NSA, QL, LU]),
     {reply, {text, list_to_binary(Payload)}, Req, State}
-  catch _ ->
-    io:format("failed to read state with exception ~p~n", [erlang:get_stacktrace()]),
+  catch _T:_E ->
     {ok, Req, State}
   end;
 websocket_info({timeout, _Ref, Msg}, Req, State) ->
