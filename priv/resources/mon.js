@@ -5,6 +5,7 @@ var map = null;
 var kml_urls = [];
 var job_id = null;
 var last_stage = null;
+var url_base = location.href.substring(7, location.href.indexOf('pages') - 1);
 
 function initialize() {
 
@@ -33,7 +34,7 @@ function initialize() {
 
   function connect()
   {
-      websocket = new WebSocket('ws://127.0.0.1:8000/websocket/monitor');
+      websocket = new WebSocket('ws://' + url_base + '/websocket/monitor');
       websocket.onopen = function(evt) { onOpen(evt) };
       websocket.onclose = function(evt) { onClose(evt) };
       websocket.onmessage = function(evt) { onMessage(evt) };
@@ -115,7 +116,7 @@ function switchkml(ndx)
 {
   if(kml != null) { kml.setMap(null); }
   var uri = 'http://mathweb.ucdenver.edu/~mvejmelka/fbs/kmls/' + job_id + "/" + kml_urls[ndx-1];
-  kml = new google.maps.KmlLayer({url: uri, map: map});
+  kml = new google.maps.KmlLayer({url: uri, map: map, preserveViewport: true});
   $("#curr_time").val(kml_urls[ndx-1].substr(0, 19));
 }
 

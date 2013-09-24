@@ -1,5 +1,5 @@
 
-var url_base = location.href.substring(0, location.href.indexOf('resources'));
+var url_base = location.href.substring(7, location.href.indexOf('pages') - 1);
 var websocket;
 
 function initialize() {
@@ -30,13 +30,13 @@ function initialize() {
 
   function updateIgnCoords(ll)
   {
-    $('#ign_lat').val(ll.ob.toPrecision(7));
-    $('#ign_lon').val(ll.pb.toPrecision(7));
+    $('#ign_lat').val(ll.lat().toPrecision(7));
+    $('#ign_lon').val(ll.lng().toPrecision(7));
   };
 
   function connect()
   {
-      websocket = new WebSocket('ws://127.0.0.1:8000/websocket/control');
+      websocket = new WebSocket('ws://' + url_base + '/websocket/control');
       websocket.onopen = function(evt) { onOpen(evt) };
       websocket.onclose = function(evt) { onClose(evt) };
       websocket.onmessage = function(evt) { onMessage(evt) };
