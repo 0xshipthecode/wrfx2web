@@ -1,4 +1,5 @@
 
+var url_base = location.href.substring(0, location.href.indexOf('resources'));
 var websocket;
 
 function initialize() {

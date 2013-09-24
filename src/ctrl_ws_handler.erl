@@ -15,6 +15,7 @@ websocket_init(_TransportName, Req, _Opts) ->
   erlang:start_timer(1000, self(), update_state),
   {ok, Req, undefined_state}.
 
+
 websocket_handle({text, Msg}, Req, State) ->
   try
     {ok, {obj, PL}, []} = rfc4627:decode(Msg),
@@ -23,8 +24,9 @@ websocket_handle({text, Msg}, Req, State) ->
         Lat = plist:get("lat", PL),
         Lon = plist:get("lon", PL),
         IT = {{2013, 9, 1}, {4, 0, 0}},
-        _FC = plist:get("fc_len", PL),
-        case jobmaster:submitjob('fire-sim', [{'ign-when', IT}, {'ign-where', {Lat, Lon}}, {'num-nodes', 12}, {ppn, 12}, {'wall-time-hrs', 4}]) of
+        FC = plist:get("fc_len", PL),
+        case jobmaster:submitjob('nasa-fire-job', [{'ign-when', IT}, {'ign-where', {Lat, Lon}},
+                                                   {'num-nodes', 12}, {ppn, 12}, {'wall-time-hrs', 4}, {'forecast-length-hrs', FC}]) of
           {ok, U, _} -> 
             Repl = io_lib:format("{ \"result\" : \"success\", \"action\" : \"submit\", \"jobid\": ~p }", [U]),
             {reply, {text, list_to_binary(Repl)}, Req, State};
@@ -39,6 +41,7 @@ websocket_handle({text, Msg}, Req, State) ->
   end;
 websocket_handle(_Data, Req, State) ->
   {ok, Req, State}.
+
 
 websocket_info({timeout, _Ref, update_state}, Req, State) ->
   erlang:start_timer(2000, self(), update_state),
