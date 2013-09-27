@@ -11,7 +11,7 @@ init({tcp, http}, _Req, _Opts) ->
   {upgrade, protocol, cowboy_websocket}.
 
 websocket_init(_TransportName, Req, _Opts) ->
-  erlang:start_timer(1000, self(), <<"{ \"action\": \"display\", \"message\" : \"Hello from wrfx2 web frontend. USAGE\\nClick anywhere on map to place ignition point. Coordinates will appear on control panel. Adjust parameters as desired and submit to start a fire simulation. Note the ignition time is fixed in the prototype. After submission, you will be redirected to a page that will render the results of the simulation.\\n\\n\" }">>),
+  erlang:start_timer(1000, self(), <<"{ \"action\": \"display\", \"message\" : \"Hello from wrfx2 web server.\\n\\nUSAGE\\nClick anywhere on map to place ignition point. Coordinates will appear on control panel. Adjust parameters as desired and submit to start a fire simulation. Note the ignition time is fixed in the prototype. After submission, you will be redirected to a page that will render the results of the simulation.\\n\\n\" }">>),
   erlang:start_timer(1000, self(), update_state),
   {ok, Req, undefined_state}.
 

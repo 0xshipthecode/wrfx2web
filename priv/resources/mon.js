@@ -19,7 +19,8 @@ function initialize() {
   var mapOptions = {
         zoom: 7,
         center: new google.maps.LatLng(47.5, -120.5),
-        mapTypeId: google.maps.MapTypeId.TERRAIN
+        mapTypeId: google.maps.MapTypeId.TERRAIN,
+        scaleControl: true
       };
 
   map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
