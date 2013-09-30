@@ -61,7 +61,7 @@ function initialize() {
     if(json['action'] == 'submit') {
       if(json['result'] == 'success') {
         sysmsg('SUCCESS! Stand by for redirect to monitoring page.');
-        setTimeout(function () { window.location.href = "http://mathweb.ucdenver.edu/~mvejmelka/fbs/pages/monitor.html?jobid=" + json['jobid']; }, 5000);
+        setTimeout(function () { window.location.href = "http://" + url_base + "/pages/monitor.html?jobid=" + json['jobid']; }, 5000);
       } else {
         sysmsg('Submit action failed with reason: ' + json['error']);
         $("#submit").attr("disabled", false);

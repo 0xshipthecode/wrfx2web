@@ -23,9 +23,8 @@ websocket_handle({text, Msg}, Req, State) ->
       <<"submit">> ->
         Lat = plist:get("lat", PL),
         Lon = plist:get("lon", PL),
-        IT = {{2013, 9, 1}, {4, 0, 0}},
         FC = plist:get("fc_len", PL),
-        case jobmaster:submitjob('nasa-fire-job', [{'ign-when', IT}, {'ign-where', {Lat, Lon}},
+        case jobmaster:submitjob('nasa-fire-job', [{'ign-specs', [{{Lat, Lon}, {1*1800, 100}} ]}, {'sim-from', {{2012, 9, 9}, {0,0,0}}},
                                                    {'num-nodes', 12}, {ppn, 12}, {'wall-time-hrs', 4}, {'forecast-length-hrs', FC}]) of
           {ok, U, _} -> 
             Repl = io_lib:format("{ \"result\" : \"success\", \"action\" : \"submit\", \"jobid\": ~p }", [U]),
