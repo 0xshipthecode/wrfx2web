@@ -1,0 +1,40 @@
+@font-face {
+    font-family: sansation-light;
+    src: url(http://mathweb.ucdenver.edu/~mvejmelka/fonts/Sansation-Light.ttf) format('opentype');
+}
+
+@font-face {
+    font-family: sansation-regular;
+    src: url(http://mathweb.ucdenver.edu/~mvejmelka/fonts/Sansation-Regular.ttf) format('opentype');
+}
+
+@font-face {
+    font-family: sansation-bold;
+    src: url(http://mathweb.ucdenver.edu/~mvejmelka/fonts/Sansation-Bold.ttf) format('opentype');
+}
+
+
+body {
+    font-family: sansation-light, sans-serif;
+    background: #eeeeee;
+}
+
+.ui.vertical.segment.top-segment {
+  margin-top: 60px;
+  margin-bottom: 80px;
+}
+
+.ui.header {
+  font-family: sansation-bold, sans-serif;
+  font-size: 3em;
+}
+
+.ui.input.login {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.ui.button.login {
+  margin-top: 20px;
+}
+

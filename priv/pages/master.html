@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+  <title>wrfx2 master</title>
+
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/elements/basic.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/elements/button.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/elements/divider.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/elements/header.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/elements/icon.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/elements/image.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/elements/input.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/elements/label.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/elements/loader.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/elements/progress.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/elements/segment.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/elements/step.min.css">
+
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/collections/breadcrumb.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/collections/form.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/collections/grid.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/collections/menu.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/collections/message.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/collections/table.min.css">
+
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/views/item.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/views/list.min.css">
+
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/modules/modal.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/modules/shape.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/modules/dropdown.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/modules/popup.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/modules/sidebar.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/modules/tab.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/modules/checkbox.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/modules/accordion.min.css">
+  <link rel="stylesheet" type="text/css" href="../resources/semantic/modules/transition.min.css">
+
+  <link rel="stylesheet" type="text/css" href="../resources/master.css">
+
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
+  <script src="../resources/semantic/modules/checkbox.js"></script>
+  <script src="../resources/semantic/modules/dimmer.js"></script>
+  <script src="../resources/semantic/modules/dropdown.js"></script>
+  <script src="../resources/semantic/modules/modal.js"></script>
+  <script src="../resources/semantic/modules/popup.js"></script>
+  <script src="../resources/semantic/modules/rating.js"></script>
+  <script src="../resources/semantic/modules/sidebar.js"></script>
+  <script src="../resources/semantic/modules/shape.js"></script>
+  <script src="../resources/semantic/modules/tab.js"></script>
+  <script src="../resources/semantic/modules/transition.js"></script>
+  <script src="../resources/semantic/modules/accordion.js"></script>
+
+  <script src="../resources/master.js"></script>
+
+</head>
+
+<body>
+
+  <div class="ui center aligned segment basic top-segment">
+    <h2 class="ui header">
+      wrfx2 master page
+    </h2>
+  </div>
+
+  <div class="ui segment basic">
+    <div class="ui large fluid system menu">
+      <a class="item"          data-tab="submit">submit</a>
+      <a class="active item"   data-tab="jobs">jobs</a>
+      <a class="item"          data-tab="system">system</a>
+    </div>
+
+  <div class="ui tab" data-tab="submit">
+    <div class="ui celled grid basic">
+      <div class="five wide column">
+        <div class="ui fluid inverted vertical jobs menu">
+          <a class="active item" id="wafirejob">Fire simulation job [WA]</a>
+          <a class="item" id="coweatherjob">Weather Forecast job [CO]</a>
+        </div>
+      </div>
+      <div class="eleven wide column">
+        <div class="segment" id="content"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui fluid active tab" data-tab="jobs">
+    <div class="ui accordion job-list">
+      <div class="title fluid">
+        <div class="right floated date">Oct 2, 2013</div>
+        <i class="dropdown icon"></i> <i class="setting icon"></i> 
+        Live job
+      </div>
+      <div class="content">
+        <div class="ui positive button floated right">Monitor</div>
+        <p>This is a short description. This is a short description. This is a short description.
+           This is a short description. waimea waikiki waihai</p>
+      </div>
+      <div class="title">
+        <div class="right floated date">Sep 14, 2013</div>
+        <i class="dropdown icon"></i> <i class="list icon"></i>
+        Completed job
+      </div>
+      <div class="content">
+        <div class="ui teal button floated right">Review</div>
+        <p>This is a short description.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui tab" data-tab="system">
+    This is the compute hardware status page.
+  </div>
+
+  </div>
+</body>
+

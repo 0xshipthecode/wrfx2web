@@ -1,0 +1,69 @@
+
+@font-face {
+    font-family: sansation-light;
+    src: url(http://mathweb.ucdenver.edu/~mvejmelka/fonts/Sansation-Light.ttf) format('opentype');
+}
+
+@font-face {
+    font-family: sansation-regular;
+    src: url(http://mathweb.ucdenver.edu/~mvejmelka/fonts/Sansation-Regular.ttf) format('opentype');
+}
+
+@font-face {
+    font-family: sansation-bold;
+    src: url(http://mathweb.ucdenver.edu/~mvejmelka/fonts/Sansation-Bold.ttf) format('opentype');
+}
+
+
+body {
+    font-family: sansation-light, sans-serif;
+    font-weight: regular;
+    background: #eeeeee;
+    width: 960px;
+    margin: 0px auto 0px auto;
+}
+
+
+.ui.segment.top-segment {
+  margin-top: 40px;
+  margin-bottom: 30px;
+}
+
+
+.ui.header {
+  margin-top: 20px;
+  font-family: sansation-bold, sans-serif;
+  font-size: 40px;
+}
+
+
+.system.menu .item {
+  font-size: 24px;
+  font-family: sansation-regular;
+}
+
+
+.jobs.menu {
+  height: 300px;
+}
+
+
+.item.content.header {
+  font-weight: bold;
+  font-size: 16px;
+  font-color: #30d000;
+}
+
+
+.segment .header {
+  font-size:20px;
+}
+
+.title .right.floated {
+  float: right;
+}
+
+.ui.accordion.job-list {
+  width: auto;
+}
+
