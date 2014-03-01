@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
-erl -detached -sname wrfx2web -pa ebin deps/*/ebin ../wrfx2/ebin/ -s wrfx2web
+HOST=`hostname -s`
+erl -detached -sname wrfx2web@$HOST -pa ebin deps/*/ebin ../wrfx2/ebin/ -mnesia dir '"../wrfx2/db"' -s wrfx2web
 
