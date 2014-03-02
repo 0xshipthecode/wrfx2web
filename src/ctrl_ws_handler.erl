@@ -24,9 +24,10 @@ websocket_handle({text, Msg}, Req, State) ->
         Lat = plist:get("lat", PL),
         Lon = plist:get("lon", PL),
         FC = plist:get("fc_len", PL),
-        case jobmaster:submitjob('nasa-fire-job', [{'ign-specs', [{{Lat, Lon}, {1*1800, 100}} ]}, {'sim-from', {{2012, 9, 9}, {0,0,0}}},
-                                                   {'num-nodes', 12}, {ppn, 12}, {'wall-time-hrs', 4}, {'forecast-length-hrs', FC}]) of
-          {ok, U, _} -> 
+        UUID = utils:'make-uuid'(),
+        case jobmaster:submit(UUID,'nasa-fire-job', [{'ign-specs', [{{Lat, Lon}, {1*1800, 100}} ]}, {'sim-from', {{2012, 9, 9}, {0,0,0}}},
+                                                     {'num-nodes', 12}, {ppn, 12}, {'wall-time-hrs', 4}, {'forecast-length-hrs', FC}]) of
+          {ok, U} -> 
             Repl = io_lib:format("{ \"result\" : \"success\", \"action\" : \"submit\", \"jobid\": ~p }", [U]),
             {reply, {text, list_to_binary(Repl)}, Req, State};
           busy ->
@@ -35,7 +36,8 @@ websocket_handle({text, Msg}, Req, State) ->
       _ ->
         {reply, {text, <<"{ \"result\"  \"error\", \"reason\" : \"invalid command\" }">>}, Req, State}
     end
-  catch _:_ ->
+  catch Cls:Body ->
+    io:format("caught exception class ~p body ~p stacktrace ~p~n", [Cls,Body,erlang:get_stacktrace()]),
     {reply, {text, <<"{ \"result\" : \"error\", \"reason\" : \"invalid json\" }">>}, Req, State}
   end;
 websocket_handle(_Data, Req, State) ->
