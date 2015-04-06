@@ -19,18 +19,18 @@ websocket_handle({text, Msg}, Req, State) ->
     case plist:get("request", PL) of
       <<"monitor">> ->
         J = binary_to_list(plist:get("jobid", PL)),
-        case jobmaster:getjobstate(J) of
-          'no-such-job' ->
+        case jobmaster:'islive?'(J) of
+          false ->
             {reply, {text, <<"{ \"request\" : \"monitor\", \"result\" : \"failed\", \"reason\" : \"Sorry, I cannot find the job you are looking for.\" }">>}, Req, State};
-          JSP ->
+          true ->
             erlang:start_timer(2000, self(), update_status),
-            %jobstate:subscribe(JSP),
-            {reply, {text, <<"{ \"request\" : \"monitor\", \"result\" : \"success\" }">>}, Req, JSP}
+            {reply, {text, <<"{ \"request\" : \"monitor\", \"result\" : \"success\" }">>}, Req, J}
          end;
       _ ->
         {reply, {text, <<"{ \"result\" : \"error\", \"reason\" : \"Request not understood by server.\" }">>}, Req, State}
     end
-  catch _:_ ->
+  catch T:E ->
+    io:format("error in handler! ~p:~p~n", [T,E]),
     {reply, {text, <<"{ \"result\" : \"error\", \"reason\" : \"error in handler\" }">>}, Req, State}
   end;
 websocket_handle(_Data, Req, State) ->
@@ -40,11 +40,11 @@ websocket_handle(_Data, Req, State) ->
 time_to_str("undefined") ->
     "undefined";
 time_to_str(T) ->
-    lists:flatten('time-arith':'to-esmf-str'(T)).
+    lists:flatten(timelib:'to-esmf-str'(T)).
 
 
-websocket_info(update_status, Req, JSP) ->
-  PL = jobstate:'get-plist'(JSP),
+websocket_info(update_status, Req, J) ->
+  PL = jobmaster:getstate(J),
   S = plist:get(stage, "undefined", PL),
   ST = time_to_str(plist:get('sim-time', "undefined", PL)),
   CT = time_to_str(plist:get('completion-time', "undefined", PL)),
@@ -55,12 +55,12 @@ websocket_info(update_status, Req, JSP) ->
                           " \"sim_accel\" : ~p, \"stage\" : ~p,"
                           " \"completion_time\" : ~p, \"percent_done\" : ~p,", [ST, SA, S, CT, PD]) ++
             " \"kmls\" : [ " ++ string:join(lists:map(fun(X) -> "\"" ++ X ++ "\"" end, Ks), ", ") ++ " ] }"),
-  {reply, {text, list_to_binary(Payload)}, Req, JSP};
+  {reply, {text, list_to_binary(Payload)}, Req, J};
 websocket_info({'state-changed', _}, Req, State) ->
   websocket_info(update_status, Req, State);
-websocket_info({timeout, _Ref, update_status}, Req, JSP) ->
+websocket_info({timeout, _Ref, update_status}, Req, J) ->
   erlang:start_timer(4000, self(), update_status),
-  websocket_info(update_status, Req, JSP);
+  websocket_info(update_status, Req, J);
 websocket_info(Info, Req, State) ->
   io:format("Unprocessed message ~p~n", [Info]),
   {ok, Req, State}.

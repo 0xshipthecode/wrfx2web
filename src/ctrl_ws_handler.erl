@@ -24,18 +24,19 @@ websocket_handle({text, Msg}, Req, State) ->
         Lat = plist:get("lat", PL),
         Lon = plist:get("lon", PL),
         FC = plist:get("fc_len", PL),
-        case jobmaster:submitjob('nasa-fire-job', [{'ign-specs', [{{Lat, Lon}, {1*1800, 100}} ]}, {'sim-from', {{2012, 9, 9}, {0,0,0}}},
-                                                   {'num-nodes', 12}, {ppn, 12}, {'wall-time-hrs', 4}, {'forecast-length-hrs', FC}]) of
-          {ok, U, _} -> 
+        case jobmaster:submit('nasa-fire-job', [{'ign-specs', [{{Lat, Lon}, {1*1800, 500}} ]}, {'sim-from', {{2012, 9, 9}, {0,0,0}}},
+                                                   {'num-nodes', 2}, {ppn, 12}, {'wall-time-hrs', 4}, {'forecast-length-hrs', FC}]) of
+          {ok, U} -> 
             Repl = io_lib:format("{ \"result\" : \"success\", \"action\" : \"submit\", \"jobid\": ~p }", [U]),
             {reply, {text, list_to_binary(Repl)}, Req, State};
-          busy ->
-            {reply, {text, <<"{\"result\" : \"failure\", \"reason\" : \"Another job is running at this time.\"}">>}, Req, State}
+          _ ->
+            {reply, {text, <<"{\"result\" : \"failure\", \"reason\" : \"reply from wrfx2 not understood\"}">>}, Req, State}
         end;
       _ ->
         {reply, {text, <<"{ \"result\"  \"error\", \"reason\" : \"invalid command\" }">>}, Req, State}
     end
-  catch _:_ ->
+  catch Cls:Err ->
+    io:format("websocket_handle: caught error ~p:~p~n", [Cls,Err]),
     {reply, {text, <<"{ \"result\" : \"error\", \"reason\" : \"invalid json\" }">>}, Req, State}
   end;
 websocket_handle(_Data, Req, State) ->
@@ -46,17 +47,17 @@ websocket_info({timeout, _Ref, update_state}, Req, State) ->
   erlang:start_timer(2000, self(), update_state),
   try
     S = sysmon:getstate(),
-    NST = length(jobmaster:listjobs()),
-    NSA = length(jobmaster:activejobs()),
+    NSA = length(jobmaster:livejobs()),
     H = plist:get(host, S),
     TN = plist:get(nodes, "unknown", S),
     FN = plist:get(freenodes, "unknown", S),
     QL = plist:get(qlen, "unknown", S),
-    LU = lists:flatten('time-arith':'to-esmf-str'(plist:get(lastupdated, S))),
+    LU = lists:flatten('timelib':'to-esmf-str'(plist:get(lastupdated, S))),
     Payload = io_lib:format("{ \"action\" : \"state_update\", \"system\" : ~p, \"nodes\" : ~p, \"freenodes\" : ~p,"
-                            " \"numsims\" : ~p, \"activesims\" : ~p, \"qlen\" : ~p, \"lastupdated\" : ~p }", [H, TN, FN, NST, NSA, QL, LU]),
+                            " \"numsims\" : 0, \"activesims\" : ~p, \"qlen\" : ~p, \"lastupdated\" : ~p }", [H, TN, FN, NSA, QL, LU]),
     {reply, {text, list_to_binary(Payload)}, Req, State}
-  catch _T:_E ->
+  catch T:E ->
+    io:format("websocket_info: caught exc ~p:~p with backtrace ~p.~n", [T,E,erlang:get_stacktrace()]),
     {ok, Req, State}
   end;
 websocket_info({timeout, _Ref, Msg}, Req, State) ->
