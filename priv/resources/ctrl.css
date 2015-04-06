@@ -1,6 +1,6 @@
     @font-face {
         font-family: distproth;
-        src: url(http://mathweb.ucdenver.edu/~mvejmelka/fonts/DistProTh.otf) format('opentype');
+        src: url(../resources/fonts/DistProTh.otf) format('opentype');
     }
 
     body, p, input {

@@ -84,13 +84,14 @@ function initialize() {
                                .css("font-size", "12");
          }
          kml_urls = json["kmls"];
+         kml_urls.sort();
          $("#kml-slider").slider('option',{max: kml_urls.length});
          if(kml == null) { switchkml(1); }
       } 
   };
 
   function onError(evt) {
-      sysmsg('ERROR ' + evt.data);
+    sysmsg('ERROR ' + evt.data);
   };
 
     $("#kml-slider").slider({
@@ -104,19 +105,19 @@ function initialize() {
 
 
 function sysmsg(code)
-  {
-    var ta = $('#sysmsg');
-    var msg = moment().format('YYYY-MM-DD_HH:mm:ss') + " - " + code + '\n';
-    ta.append(msg);
-    ta.animate({scrollTop:ta[0].scrollHeight - ta.height() }, 1000);
-  };
+{
+  var ta = $('#sysmsg');
+  var msg = moment().format('YYYY-MM-DD_HH:mm:ss') + " - " + code + '\n';
+  ta.append(msg);
+  ta.animate({scrollTop:ta[0].scrollHeight - ta.height() }, 1000);
+};
 
 
 
 function switchkml(ndx)
 {
   if(kml != null) { kml.setMap(null); }
-  var uri = 'http://mathweb.ucdenver.edu/~mvejmelka/fbs/kmls/' + job_id + "/" + kml_urls[ndx-1];
+  var uri = 'http://math.ucdenver.edu/~mvejmelka/fbs/kmls/' + job_id + "/" + kml_urls[ndx-1];
   kml = new google.maps.KmlLayer({url: uri, map: map, preserveViewport: true});
   $("#curr_time").val(kml_urls[ndx-1].substr(0, 19));
 }

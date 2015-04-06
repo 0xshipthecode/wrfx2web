@@ -1,16 +1,16 @@
 @font-face {
     font-family: sansation-light;
-    src: url(http://mathweb.ucdenver.edu/~mvejmelka/fonts/Sansation-Light.ttf) format('opentype');
+    src: url(../resources/fonts/Sansation-Light.ttf) format('opentype');
 }
 
 @font-face {
     font-family: sansation-regular;
-    src: url(http://mathweb.ucdenver.edu/~mvejmelka/fonts/Sansation-Regular.ttf) format('opentype');
+    src: url(../resources/fonts/Sansation-Regular.ttf) format('opentype');
 }
 
 @font-face {
     font-family: sansation-bold;
-    src: url(http://mathweb.ucdenver.edu/~mvejmelka/fonts/Sansation-Bold.ttf) format('opentype');
+    src: url(../resources/fonts/Sansation-Bold.ttf) format('opentype');
 }
 
 
