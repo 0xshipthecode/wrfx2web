@@ -23,12 +23,13 @@ websocket_handle({text, Msg}, Req, State) ->
       <<"submit">> ->
         Lat = plist:get("lat", PL),
         Lon = plist:get("lon", PL),
+        TS = plist:get("ign_time",PL),
         FC = plist:get("fc_len", PL),
-        UUID = utils:'make-uuid'(),
-        case jobmaster:submit(UUID,'nasa-fire-job', [{'ign-specs', [{{Lat, Lon}, {1*1800, 100}} ]}, {'sim-from', {{2012, 9, 9}, {0,0,0}}},
-                                                     {'num-nodes', 12}, {ppn, 12}, {'wall-time-hrs', 4}, {'forecast-length-hrs', FC}]) of
-          {ok, U} -> 
-            Repl = io_lib:format("{ \"result\" : \"success\", \"action\" : \"submit\", \"jobid\": ~p }", [U]),
+        U = lists:flatten(io_lib:format("firefc-~s-~2..0B", [timelib:to_esmf_str(TS),FC])),
+        case submit_job(U,Lat,Lon,TS,FC) of
+          ok ->
+            Repl = io_lib:format("{ \"result\" : \"success\"," 
+                              ++ " \"action\" : \"submit\", \"jobid\": ~p }", [U]),
             {reply, {text, list_to_binary(Repl)}, Req, State};
           _ ->
             {reply, {text, <<"{\"result\" : \"failure\", \"reason\" : \"reply from wrfx2 not understood\"}">>}, Req, State}
@@ -47,13 +48,13 @@ websocket_handle(_Data, Req, State) ->
 websocket_info({timeout, _Ref, update_state}, Req, State) ->
   erlang:start_timer(2000, self(), update_state),
   try
-    S = sysmon:getstate(),
-    NSA = length(jobmaster:livejobs()),
+    S = sysmon:get_state(),
+    NSA = length(jobmaster:live_jobs()),
     H = plist:get(host, S),
     TN = plist:get(nodes, "unknown", S),
-    FN = plist:get(freenodes, "unknown", S),
+    FN = plist:get(free_nodes, "unknown", S),
     QL = plist:get(qlen, "unknown", S),
-    LU = lists:flatten('timelib':'to-esmf-str'(plist:get(lastupdated, S))),
+    LU = lists:flatten('timelib':to_esmf_str(plist:get(last_updated, S))),
     Payload = io_lib:format("{ \"action\" : \"state_update\", \"system\" : ~p, \"nodes\" : ~p, \"freenodes\" : ~p,"
                             " \"numsims\" : 0, \"activesims\" : ~p, \"qlen\" : ~p, \"lastupdated\" : ~p }", [H, TN, FN, NSA, QL, LU]),
     {reply, {text, list_to_binary(Payload)}, Req, State}
@@ -68,3 +69,13 @@ websocket_info(_Info, Req, State) ->
 
 websocket_terminate(_Reason, _Req, _State) ->
   ok.
+
+
+submit_job(U,Lat,Lon,TS,FC) ->
+  SF = timelib:round_hours(timelib:shift_by(TS,-15,minutes),down),
+  IgnDelay = timelib:seconds_between(SF,TS),
+  jobmaster:submit(U,firejob,[
+    {ign_specs, [{{Lat, Lon}, {IgnDelay, 600, 200}}]},
+    {sim_from, SF}, {num_nodes,6}, {ppn,12},
+    {wall_time_hrs, 3},{forecast_length_hrs,FC}]). 
+ 

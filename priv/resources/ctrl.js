@@ -7,7 +7,7 @@ function initialize() {
   /* initialize the google map */
   var mapOptions = {
         zoom: 7,
-        center: new google.maps.LatLng(47.5, -120.5),
+        center: new google.maps.LatLng(39, -105.5),
         mapTypeId: google.maps.MapTypeId.TERRAIN
       };
 
@@ -104,7 +104,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
           websocket.send('{ "request": "submit", ' +
                          '"lat": ' + $('#ign_lat').val() + ", " +
                          '"lon": ' + $('#ign_lon').val() + ", " +
-                         '"time": "' +$('#ign_time').val() + '", ' +
+                         '"ign_time": "' +$('#ign_time').val() + '", ' +
                          '"fc_len": ' + $('#fc_len').val() +
                          ' }');
           $('#submit').attr("disabled", true);

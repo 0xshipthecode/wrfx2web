@@ -25,8 +25,8 @@ start(_Type, _Args) ->
                                              {<<".css">>, [<<"text/css">>]},
                                              {<<".png">>, [<<"image/png">>]}]}
 			]},
-            {"/kmls/[...]", cowboy_static, [
-                {directory, {priv_dir, wrfx2web, [<<"kmls">>]}},
+            {"/products/[...]", cowboy_static, [
+                {directory, {priv_dir, wrfx2web, [<<"products">>]}},
                                 {mimetypes, [{<<".kmz">>, [<<"application/vnd.google-earth.kmz">>]}]}
             ]}
 		]}

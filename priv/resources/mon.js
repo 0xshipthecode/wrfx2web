@@ -18,7 +18,7 @@ function initialize() {
   /* initialize the google map */
   var mapOptions = {
         zoom: 7,
-        center: new google.maps.LatLng(47.5, -120.5),
+        center: new google.maps.LatLng(39, -105.5),
         mapTypeId: google.maps.MapTypeId.TERRAIN,
         scaleControl: true
       };
@@ -117,7 +117,7 @@ function sysmsg(code)
 function switchkml(ndx)
 {
   if(kml != null) { kml.setMap(null); }
-  var uri = 'http://math.ucdenver.edu/~mvejmelka/fbs/kmls/' + job_id + "/" + kml_urls[ndx-1];
+  var uri = 'http://math.ucdenver.edu/~mvejmelka/fbs/products/' + job_id + "/" + kml_urls[ndx-1];
   kml = new google.maps.KmlLayer({url: uri, map: map, preserveViewport: true});
   $("#curr_time").val(kml_urls[ndx-1].substr(0, 19));
 }
